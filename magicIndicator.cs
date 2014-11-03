@@ -17,7 +17,7 @@ namespace NinjaTrader.Indicator
 	/// You are free to edit this and so on but don't expect anything from it. Its a tool to help you nothing more. You deside when to enter and exit the market
 /// </summary>
 	[Description("Poor Richsob's magic trading indicator.")]
-    public class PoorRichSOB : Indicator
+    public class magicIndicator : Indicator
     {
         #region Variables
         // Wizard generated variables
@@ -30,7 +30,23 @@ namespace NinjaTrader.Indicator
         }
         protected override void OnBarUpdate()
         {
+			if(CrossAbove(SMA(5), SMA(25), 1))
+			{
+				DrawArrowUp("GOShort" + CurrentBar, true, 0, Low[0] - TickSize, Color.Red);
+			}
+			else if (CrossBelow(SMA(5), SMA(25), 1))
+			{
+				DrawArrowDown("GOLong" + CurrentBar, true, 0, High[0] + TickSize, Color.Blue);
+			}
 			
+			if(SMA(5)[0] > Close[0])
+			{
+				DrawDot("BellowSMA" + CurrentBar,true, 0,Low[0] - TickSize, Color.Yellow);
+			}
+			else if(SMA(5)[0] < Close[0])
+			{
+				DrawDot("AboveSMA" + CurrentBar,true, 0,High[0] + TickSize, Color.Green);
+			}
         }
 
         #region Properties
@@ -58,41 +74,41 @@ namespace NinjaTrader.Indicator
 {
     public partial class Indicator : IndicatorBase
     {
-        private PoorRichSOB[] cachePoorRichSOB = null;
+        private magicIndicator[] cachemagicIndicator = null;
 
-        private static PoorRichSOB checkPoorRichSOB = new PoorRichSOB();
+        private static magicIndicator checkmagicIndicator = new magicIndicator();
 
         /// <summary>
         /// Poor Richsob's magic trading indicator.
         /// </summary>
         /// <returns></returns>
-        public PoorRichSOB PoorRichSOB(int myInput0)
+        public magicIndicator magicIndicator(int myInput0)
         {
-            return PoorRichSOB(Input, myInput0);
+            return magicIndicator(Input, myInput0);
         }
 
         /// <summary>
         /// Poor Richsob's magic trading indicator.
         /// </summary>
         /// <returns></returns>
-        public PoorRichSOB PoorRichSOB(Data.IDataSeries input, int myInput0)
+        public magicIndicator magicIndicator(Data.IDataSeries input, int myInput0)
         {
-            if (cachePoorRichSOB != null)
-                for (int idx = 0; idx < cachePoorRichSOB.Length; idx++)
-                    if (cachePoorRichSOB[idx].MyInput0 == myInput0 && cachePoorRichSOB[idx].EqualsInput(input))
-                        return cachePoorRichSOB[idx];
+            if (cachemagicIndicator != null)
+                for (int idx = 0; idx < cachemagicIndicator.Length; idx++)
+                    if (cachemagicIndicator[idx].MyInput0 == myInput0 && cachemagicIndicator[idx].EqualsInput(input))
+                        return cachemagicIndicator[idx];
 
-            lock (checkPoorRichSOB)
+            lock (checkmagicIndicator)
             {
-                checkPoorRichSOB.MyInput0 = myInput0;
-                myInput0 = checkPoorRichSOB.MyInput0;
+                checkmagicIndicator.MyInput0 = myInput0;
+                myInput0 = checkmagicIndicator.MyInput0;
 
-                if (cachePoorRichSOB != null)
-                    for (int idx = 0; idx < cachePoorRichSOB.Length; idx++)
-                        if (cachePoorRichSOB[idx].MyInput0 == myInput0 && cachePoorRichSOB[idx].EqualsInput(input))
-                            return cachePoorRichSOB[idx];
+                if (cachemagicIndicator != null)
+                    for (int idx = 0; idx < cachemagicIndicator.Length; idx++)
+                        if (cachemagicIndicator[idx].MyInput0 == myInput0 && cachemagicIndicator[idx].EqualsInput(input))
+                            return cachemagicIndicator[idx];
 
-                PoorRichSOB indicator = new PoorRichSOB();
+                magicIndicator indicator = new magicIndicator();
                 indicator.BarsRequired = BarsRequired;
                 indicator.CalculateOnBarClose = CalculateOnBarClose;
 #if NT7
@@ -104,11 +120,11 @@ namespace NinjaTrader.Indicator
                 Indicators.Add(indicator);
                 indicator.SetUp();
 
-                PoorRichSOB[] tmp = new PoorRichSOB[cachePoorRichSOB == null ? 1 : cachePoorRichSOB.Length + 1];
-                if (cachePoorRichSOB != null)
-                    cachePoorRichSOB.CopyTo(tmp, 0);
+                magicIndicator[] tmp = new magicIndicator[cachemagicIndicator == null ? 1 : cachemagicIndicator.Length + 1];
+                if (cachemagicIndicator != null)
+                    cachemagicIndicator.CopyTo(tmp, 0);
                 tmp[tmp.Length - 1] = indicator;
-                cachePoorRichSOB = tmp;
+                cachemagicIndicator = tmp;
                 return indicator;
             }
         }
@@ -125,18 +141,18 @@ namespace NinjaTrader.MarketAnalyzer
         /// </summary>
         /// <returns></returns>
         [Gui.Design.WizardCondition("Indicator")]
-        public Indicator.PoorRichSOB PoorRichSOB(int myInput0)
+        public Indicator.magicIndicator magicIndicator(int myInput0)
         {
-            return _indicator.PoorRichSOB(Input, myInput0);
+            return _indicator.magicIndicator(Input, myInput0);
         }
 
         /// <summary>
         /// Poor Richsob's magic trading indicator.
         /// </summary>
         /// <returns></returns>
-        public Indicator.PoorRichSOB PoorRichSOB(Data.IDataSeries input, int myInput0)
+        public Indicator.magicIndicator magicIndicator(Data.IDataSeries input, int myInput0)
         {
-            return _indicator.PoorRichSOB(input, myInput0);
+            return _indicator.magicIndicator(input, myInput0);
         }
     }
 }
@@ -151,21 +167,21 @@ namespace NinjaTrader.Strategy
         /// </summary>
         /// <returns></returns>
         [Gui.Design.WizardCondition("Indicator")]
-        public Indicator.PoorRichSOB PoorRichSOB(int myInput0)
+        public Indicator.magicIndicator magicIndicator(int myInput0)
         {
-            return _indicator.PoorRichSOB(Input, myInput0);
+            return _indicator.magicIndicator(Input, myInput0);
         }
 
         /// <summary>
         /// Poor Richsob's magic trading indicator.
         /// </summary>
         /// <returns></returns>
-        public Indicator.PoorRichSOB PoorRichSOB(Data.IDataSeries input, int myInput0)
+        public Indicator.magicIndicator magicIndicator(Data.IDataSeries input, int myInput0)
         {
             if (InInitialize && input == null)
                 throw new ArgumentException("You only can access an indicator with the default input/bar series from within the 'Initialize()' method");
 
-            return _indicator.PoorRichSOB(input, myInput0);
+            return _indicator.magicIndicator(input, myInput0);
         }
     }
 }
